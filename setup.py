@@ -55,7 +55,7 @@ def main():
     # CFLAG
     # I intend to use -Ofast, however if gcc version < 4.6, this option is unavailable so...
     # should I care about old gcc compiler?...
-    extra_c_args = ["-w","-Ofast", "-g0"] # for C, -Ofast implies -O3 and -ffast-math
+    extra_c_args = ["-w","/Ox", "-g0"] # for C, -Ofast implies -O3 and -ffast-math
 
     # CFLAG for fermi-lite related codes
     clang = False
@@ -89,17 +89,17 @@ def main():
         pass
 
     extra_c_args_for_fermi = ["-std=gnu99","-DUSE_SIMDE", "-DSIMDE_ENABLE_NATIVE_ALIASES"]
-    if icc or sysconfig.get_config_vars()['CC'] == 'icc':
-        extra_c_args_for_fermi.extend(['-qopenmp-simd', '-DSIMDE_ENABLE_OPENMP'])
-    elif new_gcc or clang or sysconfig.get_config_vars()['CC'] == 'clang':
-        extra_c_args_for_fermi.extend(['-fopenmp-simd', '-DSIMDE_ENABLE_OPENMP'])
+    #if icc or sysconfig.get_config_vars()['CC'] == 'icc':
+    #    extra_c_args_for_fermi.extend(['-qopenmp-simd', '-DSIMDE_ENABLE_OPENMP'])
+    #elif new_gcc or clang or sysconfig.get_config_vars()['CC'] == 'clang':
+    #    extra_c_args_for_fermi.extend(['-fopenmp-simd', '-DSIMDE_ENABLE_OPENMP'])
 
     # extensions, those have to be processed by Cython
     ext_modules = [ \
-                    Extension("MACS3.Signal.HMMR_EM", ["MACS3/Signal/HMMR_EM.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
-                    Extension("MACS3.Signal.HMMR_Signal_Processing", ["MACS3/Signal/HMMR_Signal_Processing.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
-                    Extension("MACS3.Signal.HMMR_HMM", ["MACS3/Signal/HMMR_HMM.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
-                    Extension("MACS3.Signal.Prob", ["MACS3/Signal/Prob.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
+                    Extension("MACS3.Signal.HMMR_EM", ["MACS3/Signal/HMMR_EM.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
+                    Extension("MACS3.Signal.HMMR_Signal_Processing", ["MACS3/Signal/HMMR_Signal_Processing.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
+                    Extension("MACS3.Signal.HMMR_HMM", ["MACS3/Signal/HMMR_HMM.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
+                    Extension("MACS3.Signal.Prob", ["MACS3/Signal/Prob.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
                     Extension("MACS3.Signal.Region", ["MACS3/Signal/Region.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
                     Extension("MACS3.Signal.Pileup", ["MACS3/Signal/Pileup.pyx","MACS3/Signal/cPosValCalculation.c"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
                     Extension("MACS3.Signal.PileupV2", ["MACS3/Signal/PileupV2.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),                    
@@ -108,25 +108,25 @@ def main():
                     Extension("MACS3.Signal.SignalProcessing", ["MACS3/Signal/SignalProcessing.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
                     Extension("MACS3.Signal.FixWidthTrack", ["MACS3/Signal/FixWidthTrack.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
                     Extension("MACS3.Signal.PairedEndTrack", ["MACS3/Signal/PairedEndTrack.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    Extension("MACS3.Signal.BedGraph", ["MACS3/Signal/BedGraph.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    #Extension("MACS3.Signal.BedGraphV2", ["MACS3/Signal/BedGraphV2.pyx"], libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),                    
+                    Extension("MACS3.Signal.BedGraph", ["MACS3/Signal/BedGraph.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    #Extension("MACS3.Signal.BedGraphV2", ["MACS3/Signal/BedGraphV2.pyx"], libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),                    
                     Extension("MACS3.Signal.ScoreTrack", ["MACS3/Signal/ScoreTrack.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args ),
                     Extension("MACS3.Signal.CallPeakUnit", ["MACS3/Signal/CallPeakUnit.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    Extension("MACS3.Signal.VariantStat",["MACS3/Signal/VariantStat.pyx",],libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    Extension("MACS3.Signal.ReadAlignment",["MACS3/Signal/ReadAlignment.pyx",],libraries=["m"],include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    Extension("MACS3.Signal.VariantStat",["MACS3/Signal/VariantStat.pyx",],libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    Extension("MACS3.Signal.ReadAlignment",["MACS3/Signal/ReadAlignment.pyx",],libraries=[],include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
                     Extension("MACS3.Signal.RACollection",["MACS3/Signal/RACollection.pyx","MACS3/fermi-lite/bfc.c","MACS3/fermi-lite/bseq.c",\
                                                            "MACS3/fermi-lite/bubble.c","MACS3/fermi-lite/htab.c","MACS3/fermi-lite/ksw.c","MACS3/fermi-lite/kthread.c",\
                                                            "MACS3/fermi-lite/mag.c","MACS3/fermi-lite/misc.c","MACS3/fermi-lite/mrope.c","MACS3/fermi-lite/rld0.c",\
                                                            "MACS3/fermi-lite/rle.c","MACS3/fermi-lite/rope.c","MACS3/fermi-lite/unitig.c", "MACS3/Signal/swalign.c" ], \
                               libraries=["m","z"], include_dirs=numpy_include_dir+["./","./MACS3/fermi-lite/","./MACS3/Signal/"], extra_compile_args=extra_c_args+extra_c_args_for_fermi),
-                    Extension("MACS3.Signal.UnitigRACollection",["MACS3/Signal/UnitigRACollection.pyx"],libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    Extension("MACS3.Signal.PosReadsInfo",["MACS3/Signal/PosReadsInfo.pyx",],libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
-                    Extension("MACS3.Signal.PeakVariants",["MACS3/Signal/PeakVariants.pyx",],libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    Extension("MACS3.Signal.UnitigRACollection",["MACS3/Signal/UnitigRACollection.pyx"],libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    Extension("MACS3.Signal.PosReadsInfo",["MACS3/Signal/PosReadsInfo.pyx",],libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
+                    Extension("MACS3.Signal.PeakVariants",["MACS3/Signal/PeakVariants.pyx",],libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
                     # IO
                     Extension("MACS3.IO.Parser",["MACS3/IO/Parser.pyx"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args),
                     Extension("MACS3.IO.PeakIO", ["MACS3/IO/PeakIO.pyx"], extra_compile_args=extra_c_args),
                     Extension("MACS3.IO.BedGraphIO", ["MACS3/IO/BedGraphIO.pyx"], extra_compile_args=extra_c_args),
-                    Extension("MACS3.IO.BAM",["MACS3/IO/BAM.pyx",],libraries=["m"], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args) ]
+                    Extension("MACS3.IO.BAM",["MACS3/IO/BAM.pyx",],libraries=[], include_dirs=numpy_include_dir, extra_compile_args=extra_c_args) ]
 
 
     with open("README.md", "r") as fh:
